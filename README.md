@@ -1,5 +1,9 @@
 # NandOS
 
-A basic OS designed to get an understanding of Assembly and know how to make a computer entirely from logic gates.
+A project aiming to create a simple command-line OS completely from scratch, using NASM assembly.
 
-Might make this into something big later, who knows!
+For now the OS is in 16 bit, but this might be expanded as the project grows
+
+Current functionalities:
+ -  Printing strings
+ -  Taking keyboard input
