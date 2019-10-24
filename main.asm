@@ -7,7 +7,7 @@ strprint:                   ; prints a string loaded into SI to the terminal
 	mov ah, 0x0e
 .loop:
 	lodsb
-	cmp al, 0
+	cmp al, 0x00
 	je .end
 	int 0x10
 	jmp .loop
@@ -42,7 +42,21 @@ strclear:                   ; clears a string put in DI and with a size stored i
     jmp .loop
 .end:
     ret
-    
+
+strcomp:                    ; compares a string in ECX with another string in SI, setting BL to 1 if they are equal
+    xor bl, bl
+.loop:    
+    lodsb
+    cmp al, [ecx]
+    jne .false
+    cmp al, 0x00
+    je .true     
+    jmp .loop 
+.false:
+    ret
+.true:
+    mov bl, 1
+    ret
 
 start:
 	xor ax, ax
@@ -63,11 +77,19 @@ start:
     int 0x10
     mov di, input_buffer
     mov bl, input_len
+    mov ecx, nandos_p
+    mov si, input_buffer
+    call strcomp
     call strclear
     jmp .loop
+.reply:
+    mov si, nandos_r
+    call strprint
 
 string: db "Hello, World!", 0x0a, 0x0d, 0x00
-string2: db "NandOS", 0x00
+nandos_p: db 0x00
+nandos_r: db "KFC's nunmber one competitor since 2019!", 0x00
+
 
 input_buffer times 50 DB ' ', 0x00
 input_len equ $-input_buffer
